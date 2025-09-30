@@ -11,4 +11,5 @@ make test               # Autotest -> "OK"
 
 ## Dokumentation
 
--**Doku & Management-Summary:** [./docs/README.md](./docs/README.md)
+**Doku & Management-Summary:** [→ ./docs/README.md](./docs/README.md)
+
