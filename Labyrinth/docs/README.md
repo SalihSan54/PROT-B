@@ -1,19 +1,34 @@
 # Dokumentation – Labyrinth (C)
 
 ## Management Summary
-- **PDF (Repo-intern):** [management-summary.pdf](./management-summary.pdf)
-- **PDF (GitHub-Webansicht):** https://github.com/SalihSan54/PROT-B/blob/main/Labyrinth/docs/management-summary.pdf
-- **Markdown:** [management-summary.md](./management-summary.md)
 
-> Hinweis: In VS Code Codespaces lässt sich PDF nicht direkt anzeigen.  
-> Auf GitHub (Link oben) öffnet sich das PDF im Browser.
+- **PDF (Browser-Ansicht auf GitHub):**  
+  https://github.com/SalihSan54/PROT-B/blob/main/Labyrinth/docs/management-summary.pdf
+
+- **PDF (Repo-intern / relativ, z. B. nach dem Klonen):**  
+  [management-summary.pdf](./management-summary.pdf)
+
+- **PDF (Direkt-Download):**  
+  https://raw.githubusercontent.com/SalihSan54/PROT-B/main/Labyrinth/docs/management-summary.pdf
+
+- **Management Summary als Markdown (Browser-Ansicht auf GitHub):**  
+  https://github.com/SalihSan54/PROT-B/blob/main/Labyrinth/docs/management-summary.md
+
+- **Management Summary als Markdown (Repo-intern / relativ):**  
+  [management-summary.md](./management-summary.md)
+
+> **Hinweis:** In VS Code Codespaces lassen sich PDFs im Editor nicht direkt anzeigen.  
+> Öffne dafür den **Browser-Link** (oben), oder nutze den **Direkt-Download**.
 
 ---
 
 ## Kurz-Anleitung (Build & Run)
+
 ```bash
 make
-./labyrinth                # Standard: 10x10, ~15% Hindernisse
-# Beispiel mit Parametern:
+./labyrinth          # Standard: 10x10, ~15% Hindernisse
+
+# Beispiel mit Parametern (rows cols ratio):
 ./labyrinth 12 12 0.2
-make test                  # Autotest -> "OK"
+
+make test            # Autotest -> "OK"
