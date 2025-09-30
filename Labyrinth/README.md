@@ -9,3 +9,7 @@ make
 ./labyrinth                # Standard 10x10, ~15% Hindernisse
 ./labyrinth 12 12 0.2      # Beispiel mit Parametern (rows cols ratio)
 make test                  # Autotest -> "OK"
+## Dokumentation
+
+- **Doku & Management-Summary (Startseite):** [docs/README.md](./docs/README.md)
+- **Dokumenten-Ordner:** [docs/](./docs/)
