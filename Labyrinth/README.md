@@ -13,4 +13,4 @@ make test                     # Autotest -> "OK"
 ## Dokumentation
 
 - **Doku & Management-Summary (Startseite):** [docs/README.md](./docs/README.md)
-- **Dokumenten-Ordner:** [docs/](./docs/)
+
