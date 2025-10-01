@@ -54,22 +54,31 @@ classDiagram
 
 ```mermaid
 flowchart TD
-  A([Taste lesen (W/A/S/D/Q)]) -->|Q gedrückt| Z((Ende))
+flowchart TD
+  A([Taste lesen (W/A/S/D oder Q)]) -->|Q| Z((Ende))
   A --> B{Eingabe gültig?}
-  B -- Nein --> H[Hinweis anzeigen]
-  H --> A
+
+  B -- Nein --> M[Hinweis]
+  M --> A
+
   B -- Ja --> C[Zielposition berechnen]
-  C --> D{Innerhalb des Feldes?}
+  C --> D{Innerhalb Feld?}
+
   D -- Nein --> A
-  D -- Ja --> E{Zielzelle: Inhalt}
-  E -- Hindernis O --> A
-  E -- Schatz T --> I([Siegmeldung])
-  I --> Z
-  E -- Leer --> F[Spieler auf Ziel setzen]
-  F --> G[Zuege++ und Grid aktualisieren]
-  G --> J{Schatz gefunden?}
-  J -- Ja --> I
-  J -- Nein --> A
+  D -- Ja --> E{Zelle am Ziel?}
+
+  E -- Hindernis 'O' --> A
+  E -- Schatz 'T' --> I[Siegmeldung → Ende]
+  E -- Leer '.' --> F[Zug ausführen]
+
+  F --> G[Züge++ & Grid aktualisieren]
+  G --> H{Schatz gefunden?}
+
+  H -- Ja --> I
+  H -- Nein --> A
+
+  Z((Ende))
+
 ```
 
 **Abb. 3 – Spielzug:** Eingabe prüfen → Zielposition berechnen → Kollision/Hindernis prüfen → Position/Zähler aktualisieren → Siegen oder weiterzeichnen.
@@ -97,15 +106,17 @@ stateDiagram-v2
 
 ```mermaid
 flowchart TD
-  S[Start] --> A[Grid rows×cols = '.']
+  S([Start]) --> A[Grid rows x cols = '.']
   A --> B[Spieler zufällig 'P']
-  B --> C[Schatz zufällig 'T' (≠ P)]
+  B --> C[Schatz zufällig 'T' (!= P)]
   C --> D{ratio > 0?}
-  D -- nein --> F[Grid zurückgeben]
-  D -- ja --> E[≈ratio Zellen zu 'O']
-  E --> F[Grid zurückgeben]
+
+  D -- Nein --> F[Grid zurückgeben]
+  D -- Ja --> E[ratio Zellen zu 'O']
+
+  E --> F
   F --> G[Status = Running]
-  G --> H[Ende]
+  G --> H((Ende)) 
 ```
 
 **Abb. 5 – Kartenerzeugung:** Grid füllen, `P`/`T` platzieren, je nach `ratio` Hindernisse `O` setzen; danach Status `Running`.
