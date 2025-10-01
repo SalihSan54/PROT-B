@@ -24,7 +24,7 @@ flowchart LR
   class std,io sys;
 ```
 
-**Kurz-Erklärung:** `main.c` spricht über `labyrinth.h` mit `labyrinth.c`. Tests hängen am Header → saubere Modularisierung.
+**Abb. 1 – Modul-Überblick:** `main.c` spricht über `labyrinth.h` mit `labyrinth.c`; Tests hängen an der API; Nutzung von `stdlib.h/stdio.h/rand()`.
 
 ---
 
@@ -46,7 +46,7 @@ classDiagram
   Game "1" o-- "1" Pos : treasure
 ```
 
-**Kurz-Erklärung:** `Game` kapselt den Spielzustand, `Pos` beschreibt Koordinaten; `grid` ist die 2D-Matrix (rows×cols).
+**Abb. 2 – Datenmodell:** `Game` kapselt den gesamten Spielzustand (`rows/cols/ratio/moves/grid/player/treasure`); `Pos` beschreibt Koordinaten.
 
 ---
 
@@ -71,7 +71,7 @@ flowchart TD
   Z((Ende))
 ```
 
-**Kurz-Erklärung:** Eingabe prüfen → bewegen/kollisionscheck → gewinnen oder weiterlaufen → Spielfeld neu ausgeben.
+**Abb. 3 – Spielzug:** Eingabe prüfen → Zielposition berechnen → Kollision/Hindernis prüfen → Position/Zähler aktualisieren → Siegen oder weiterzeichnen.
 
 ---
 
@@ -88,7 +88,7 @@ stateDiagram-v2
   Ended --> [*]
 ```
 
-**Kurz-Erklärung:** Explizite Zustände dokumentieren Lebenszyklus (Start, Laufen, Gewinn, Ende).
+**Abb. 4 – Zustände:** Vom Start (`Init/Generate`) in `Running`; Ende bei `Won` (Schatz) oder `Ended` (Quit).
 
 ---
 
@@ -107,7 +107,7 @@ flowchart TD
   G --> H[Ende]
 ```
 
-**Kurz-Erklärung:** `ratio` steuert Hindernisdichte; Spieler/Schatz werden platziert; danach Zustand **Running**.
+**Abb. 5 – Kartenerzeugung:** Grid füllen, `P`/`T` platzieren, je nach `ratio` Hindernisse `O` setzen; danach Status `Running`.
 
 ---
 
@@ -132,4 +132,6 @@ sequenceDiagram
   R-->>U: Spielfeld anzeigen
 ```
 
-**Hinweis:** Sollte ein Diagramm auf GitHub nicht sofort erscheinen, die Seite kurz neu laden.
+**Abb. 6 – Sequenz (optional):** Interaktion von Nutzer, Eingabe, Spiel-Logik und Rendering in einem Zug.
+
+---
