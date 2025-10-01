@@ -1,16 +1,25 @@
 # Labyrinth (C, Konsole)
 
-Kleines Konsolenspiel in C. Ein zufälliges Labyrinth wird erzeugt; der Spieler **P** bewegt sich mit **W/A/S/D** zum Schatz **T**. **Q** beendet.
+Ein kleines Konsolenspiel:  
+Es wird ein zufälliges Labyrinth erzeugt.  
+Der Spieler **P** bewegt sich mit **W/A/S/D** durch das Spielfeld, um den Schatz **T** zu erreichen.  
+Beenden mit **Q**.  
+
+👉 Ausführliche Dokumentation mit Management-Summary und Diagrammen findest du hier: [docs/README.md](./docs/README.md)
+
+---
 
 ## Build & Run
+
 ```bash
+# Kompilieren
 make
-./labyrinth                    # Standard 10x10, ~15% Hindernisse
-./labyrinth 12 12 0.2         # Beispiel mit Parametern (rows cols ratio)
-make test                     # Autotest -> "OK"
-```
 
-## Dokumentation
+# Standard: 10x10, ca. 15% Hindernisse
+./labyrinth
 
-- **Doku & Management-Summary (Startseite):** [docs/README.md](./docs/README.md)
+# Beispiel mit Parametern: (rows cols ratio)
+./labyrinth 12 12 0.2
 
+# Tests ausführen
+make test
