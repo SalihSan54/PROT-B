@@ -1,127 +1,133 @@
+# Diagramme
+
+In diesem Abschnitt werden alle wichtigen Diagramme zum Labyrinth-Spiel dargestellt und erklärt. Die Abbildungen sind nummeriert und inhaltlich beschrieben.
+---
+
 ## Modul-Überblick (Dateien & Abhängigkeiten)
+
 ```mermaid
 flowchart LR
-  subgraph Projekt
+subgraph Projekt
     main["main.c"] --> api["labyrinth.h (API)"]
-    api --> impl["labyrinth.c (Implementierung)"]
+    api --> impl["labyrinth.c<br>(Implementierung)"]
     tests["tests/ (Autotests)"] --> api
     impl --> std["stdlib.h, stdio.h, rand()"]
     main --> io["stdio.h / I/O"]
-  end
+end
 
-  classDef file fill:#eef6ff,stroke:#1e66f5,stroke-width:1px,color:#0b2b6b;
-  classDef sys  fill:#fff4e6,stroke:#e8590c,color:#5f3c00;
+classDef file fill:#eef6ff,stroke:#1e66f5,stroke-width:1px,color:#0b2b6b;
+classDef sys  fill:#fff4e6,stroke:#e8590c,color:#5f3c00;
 
-  class main,api,impl,tests file;
-  class std,io sys;
+class main,api,impl,tests file;
+class std,io sys;
 ```
-**Abb. 1 – Modul-Überblick:** `main.c` spricht via `labyrinth.h` mit `labyrinth.c`; Tests hängen an der API; Nutzung von `stdlib.h/stdio.h/rand()`.
-
----
+Abb. 1 – Modul-Überblick: main.c spricht via labyrinth.h mit labyrinth.c; Tests hängen an der API; Nutzung von stdlib.h/stdio.h/rand().
+--- 
 
 ## Datenmodell (C-Structs)
+
 ```mermaid
 classDiagram
-  class Pos { +int r; +int c }
-  class Game {
-    +int rows
-    +int cols
-    +float ratio
-    +int moves
-    +char** grid
-    +Pos player
-    +Pos treasure
-  }
-  Game "1" o-- "1" Pos : player
-  Game "1" o-- "1" Pos : treasure
+    class Position { 
+        +int zeile 
+        +int spalte 
+    }
+
+    class Spiel {
+        +int zeilen
+        +int spalten
+        +float hinderungsrate
+        +int zuege
+        +char** raster
+        +Position spieler
+        +Position schatz
+    }
+
+    Spiel "1" o-- "1" Position : spieler
+    Spiel "1" o-- "1" Position : schatz
+
 ```
-**Abb. 2 – Datenmodell:** `Game` kapselt den Spielzustand (`rows/cols/ratio/moves/grid/player/treasure`); `Pos` beschreibt Koordinaten.
+Abb. 2 – Datenmodell: Game kapselt den Spielzustand (rows/cols/ratio/moves/grid/player/treasure). Pos beschreibt Koordinaten.
+--- 
 
----
+## Übersicht Spiellogik
 
-## Spielzug – Ablauf
 ```mermaid
 flowchart TD
-  A["Start: Eingabe lesen (W/A/S/D oder Q)"] -->|Q| Z["Ende"]
-  A --> B{"Eingabe gueltig?"}
-
-  B -- "nein" --> M["Hinweis"]
-  M --> A
-
-  B -- "ja" --> C["Zielposition berechnen"]
-  C --> D{"Innerhalb Feld?"}
-
-  D -- "nein" --> M2["Ignorieren"]
-  M2 --> A
-
-  D -- "ja" --> E{"Zelle am Ziel?"}
-
-  E -- "Hindernis O" --> M3["Blockiert"]
-  M3 --> A
-
-  E -- "Schatz T" --> F["Spieler = Ziel setzen"]
-  E -- "Leere Punkt" --> F
-
-  F --> G["Zuege++ und Grid aktualisieren"]
-  G --> H{"Schatz gefunden?"}
-
-  H -- "ja" --> I["Siegmeldung und Ende"]
-  H -- "nein" --> J["Spielfeld ausgeben"]
-  J --> A
+    start(["Start"]) --> init["Initialisierung Spiel"]
+    init --> zufall["Zufallspositionen für Spieler und Schatz"]
+    zufall --> spielfeld["Spielfeld erzeugen"]
+    spielfeld --> schleife{"Spielzug möglich?"}
+    schleife -->|Ja| eingabe["Eingabe verarbeiten"]
+    eingabe --> pruefen{"Zug prüfen: gültig/blockiert"}
+    pruefen -->|gültig| update["Position aktualisieren"]
+    pruefen -->|blockiert| hinweis["Hinweis: ungültig"]
+    update --> sieg{"Schatz erreicht?"}
+    hinweis --> schleife
+    sieg -->|Nein| schleife
+    sieg -->|Ja| ende(["Spielende"])
 ```
-**Abb. 3 – Spielzug:** Eingabe pruefen → Zielposition berechnen → Kollision/Hindernis pruefen → Position/Zaehler aktualisieren → Siegen oder weiterzeichnen.
+Abb. 3 – Übersicht Spiellogik: Ablauf von Initialisierung über Spielfeld, Züge, Prüfung bis zum Spielende.
+--- 
 
----
+## Übersicht Eingabe
 
-## Spielzustände – State Machine
-```mermaid
-stateDiagram-v2
-  [*] --> Init
-  Init --> Generate : rows/cols/ratio
-  Generate --> Running : Grid erstellt und P/T/O gesetzt
-  Running --> Won : Spieler erreicht Schatz
-  Running --> Ended : Q gedrueckt
-  Won --> Ended : Meldung
-  Ended --> [*]
-```
-**Abb. 4 – Zustände:** Vom Start (`Init/Generate`) in `Running`; Ende bei `Won` (Schatz) oder `Ended` (Quit).
-
----
-
-## Kartenerzeugung – Ablauf
 ```mermaid
 flowchart TD
-  S["Start"] --> A["Grid rows x cols = '.'"]
-  A --> B["Spieler zufaellig P"]
-  B --> C["Schatz zufaellig T (P != T)"]
-  C --> D{"ratio > 0"}
-  D -- "nein" --> F["Grid zurueckgeben"]
-  D -- "ja" --> E["Anteil (ratio) Zellen zu O"]
-  E --> F
-  F --> G["Status = Running"]
-  G --> H["Ende"]
-```
-**Abb. 5 – Kartenerzeugung:** Grid fuellen, `P`/`T` platzieren, je nach `ratio` Hindernisse `O` setzen; danach Status `Running`.
+    classDef default fill:#222,color:#fff,font-size:12px;
 
+    start([Tasteneingabe W/A/S/D/Q]) --> normal["Normierte Eingabe"]
+    normal --> pruefen{"Eingabe gültig?"}
+    pruefen -->|Ja| weiter["Eingabe zurückgeben (W/A/S/D)"]
+    pruefen -->|Q| ende([Spielende])
+    pruefen -->|Nein| hinweis["Hinweis: ungültige Eingabe"]
+    hinweis --> start
+```
+Abb. 4 – Übersicht Eingabe: Verarbeitung der Nutzereingabe.
+W/A/S/D = gültige Spielzüge, Q = Spielende, ungültige Eingaben führen zu einer Wiederholung.
+--- 
+
+## Übersicht Spielfeld
+
+```mermaid
+flowchart TD
+    start(["Initialisierung"]) --> grid["Spielfeld anlegen"]
+    grid --> hindernisse["Hindernisse zufällig platzieren"]
+    hindernisse --> posSpieler["Position Spieler setzen"]
+    posSpieler --> posSchatz["Position Schatz setzen"]
+    posSchatz --> fertig(["Spielfeld bereit"])
+```
+Abb. 5 – Übersicht Spielfeld: Ablauf der Spielfelderstellung mit Hindernissen, Spieler- und Schatz-Position.
+--- 
+
+## Übersicht Renderer
+
+```mermaid
+flowchart TD
+    start(["Start"]) --> init["Init Renderer"]
+    init --> grid["Daten laden"]
+    grid --> draw["Spielfeld zeichnen"]
+    draw --> output["Konsole Ausgabe"]
+    output --> ende(["Fertig"])
+```
+Abb. 6 – Übersicht Renderer: Ablauf von Initialisierung über Laden der Spielfeld-Daten, Zeichnen mit Spieler/Schatz und Ausgabe auf der Konsole.
 ---
 
-## (Optional) Sequenz – Ein Zug
-```mermaid
-sequenceDiagram
-  participant U as User
-  participant I as Input
-  participant G as Game
-  participant R as Renderer
+## Übersicht Zugauswertung
 
-  U->>I: Taste (W/A/S/D/Q)
-  I->>G: normalisierte Eingabe
-  alt gueltig und frei
-    G->>G: Position berechnen
-    G->>G: Grid und Zaehler aktualisieren
-  else blockiert/ungueltig
-    G->>U: Hinweis
-  end
-  G->>R: aktuelles Grid
-  R-->>U: Spielfeld anzeigen
+```mermaid
+flowchart TD
+    start(["Start"]) --> pruefen{"Zug möglich?"}
+    pruefen -->|Ja| update["Position aktualisieren"]
+    pruefen -->|Nein| hinweis["Hinweis: blockiert"]
+
+    update --> sieg{"Schatz erreicht?"}
+    sieg -->|Ja| erfolg["Herzlichen Glückwunsch<br/>alle Schätze gefunden"]
+    erfolg --> ende(["Spielende"])
+    sieg -->|Nein| start
+
+    hinweis --> start
+
 ```
-**Abb. 6 – Sequenz (optional):** Interaktion von Nutzer, Eingabe, Spiel-Logik und Rendering in einem Zug.
+Abb. 7 – Übersicht Zugauswertung: Prüfung ob ein Zug möglich ist, Aktualisierung der Position oder Hinweis bei Blockade; Siegprüfung mit Erfolgsmeldung und Spielende.
+--- 
