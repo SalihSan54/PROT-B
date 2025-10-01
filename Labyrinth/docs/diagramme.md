@@ -1,12 +1,4 @@
-# Diagramme – Labyrinth (C)
-
-Die folgenden Mermaid-Diagramme dokumentieren Aufbau und Ablauf des Projekts.  
-GitHub rendert diese Diagramme automatisch in der Dateiansicht.
-
----
-
-## 1) Modul-Überblick (Dateien & Abhängigkeiten)
-
+## Modul-Überblick (Dateien & Abhängigkeiten)
 ```mermaid
 flowchart LR
   subgraph Projekt
@@ -23,13 +15,11 @@ flowchart LR
   class main,api,impl,tests file;
   class std,io sys;
 ```
-
-**Abb. 1 – Modul-Überblick:** `main.c` spricht über `labyrinth.h` mit `labyrinth.c`; Tests hängen an der API; Nutzung von `stdlib.h/stdio.h/rand()`.
+**Abb. 1 – Modul-Überblick:** `main.c` spricht via `labyrinth.h` mit `labyrinth.c`; Tests hängen an der API; Nutzung von `stdlib.h/stdio.h/rand()`.
 
 ---
 
-## 2) Datenmodell (C-Structs)
-
+## Datenmodell (C-Structs)
 ```mermaid
 classDiagram
   class Pos { +int r; +int c }
@@ -45,86 +35,77 @@ classDiagram
   Game "1" o-- "1" Pos : player
   Game "1" o-- "1" Pos : treasure
 ```
-
-**Abb. 2 – Datenmodell:** `Game` kapselt den gesamten Spielzustand (`rows/cols/ratio/moves/grid/player/treasure`); `Pos` beschreibt Koordinaten.
+**Abb. 2 – Datenmodell:** `Game` kapselt den Spielzustand (`rows/cols/ratio/moves/grid/player/treasure`); `Pos` beschreibt Koordinaten.
 
 ---
 
-## 3) Spielzug – Ablauf
-
+## Spielzug – Ablauf
 ```mermaid
 flowchart TD
-flowchart TD
-  A([Taste lesen (W/A/S/D oder Q)]) -->|Q| Z((Ende))
-  A --> B{Eingabe gültig?}
+  A["Start: Eingabe lesen (W/A/S/D oder Q)"] -->|Q| Z["Ende"]
+  A --> B{"Eingabe gueltig?"}
 
-  B -- Nein --> M[Hinweis]
+  B -- "nein" --> M["Hinweis"]
   M --> A
 
-  B -- Ja --> C[Zielposition berechnen]
-  C --> D{Innerhalb Feld?}
+  B -- "ja" --> C["Zielposition berechnen"]
+  C --> D{"Innerhalb Feld?"}
 
-  D -- Nein --> A
-  D -- Ja --> E{Zelle am Ziel?}
+  D -- "nein" --> M2["Ignorieren"]
+  M2 --> A
 
-  E -- Hindernis 'O' --> A
-  E -- Schatz 'T' --> I[Siegmeldung → Ende]
-  E -- Leer '.' --> F[Zug ausführen]
+  D -- "ja" --> E{"Zelle am Ziel?"}
 
-  F --> G[Züge++ & Grid aktualisieren]
-  G --> H{Schatz gefunden?}
+  E -- "Hindernis O" --> M3["Blockiert"]
+  M3 --> A
 
-  H -- Ja --> I
-  H -- Nein --> A
+  E -- "Schatz T" --> F["Spieler = Ziel setzen"]
+  E -- "Leere Punkt" --> F
 
-  Z((Ende))
+  F --> G["Zuege++ und Grid aktualisieren"]
+  G --> H{"Schatz gefunden?"}
 
+  H -- "ja" --> I["Siegmeldung und Ende"]
+  H -- "nein" --> J["Spielfeld ausgeben"]
+  J --> A
 ```
-
-**Abb. 3 – Spielzug:** Eingabe prüfen → Zielposition berechnen → Kollision/Hindernis prüfen → Position/Zähler aktualisieren → Siegen oder weiterzeichnen.
+**Abb. 3 – Spielzug:** Eingabe pruefen → Zielposition berechnen → Kollision/Hindernis pruefen → Position/Zaehler aktualisieren → Siegen oder weiterzeichnen.
 
 ---
 
-## 4) Spielzustände – State Machine
-
+## Spielzustände – State Machine
 ```mermaid
 stateDiagram-v2
   [*] --> Init
   Init --> Generate : rows/cols/ratio
-  Generate --> Running : Grid erstellt & P/T/O gesetzt
+  Generate --> Running : Grid erstellt und P/T/O gesetzt
   Running --> Won : Spieler erreicht Schatz
-  Running --> Ended : 'Q' gedrückt
+  Running --> Ended : Q gedrueckt
   Won --> Ended : Meldung
   Ended --> [*]
 ```
-
 **Abb. 4 – Zustände:** Vom Start (`Init/Generate`) in `Running`; Ende bei `Won` (Schatz) oder `Ended` (Quit).
 
 ---
 
-## 5) Kartenerzeugung – Ablauf
-
+## Kartenerzeugung – Ablauf
 ```mermaid
 flowchart TD
-  S([Start]) --> A[Grid rows x cols = '.']
-  A --> B[Spieler zufällig 'P']
-  B --> C[Schatz zufällig 'T' (!= P)]
-  C --> D{ratio > 0?}
-
-  D -- Nein --> F[Grid zurückgeben]
-  D -- Ja --> E[ratio Zellen zu 'O']
-
+  S["Start"] --> A["Grid rows x cols = '.'"]
+  A --> B["Spieler zufaellig P"]
+  B --> C["Schatz zufaellig T (P != T)"]
+  C --> D{"ratio > 0"}
+  D -- "nein" --> F["Grid zurueckgeben"]
+  D -- "ja" --> E["Anteil (ratio) Zellen zu O"]
   E --> F
-  F --> G[Status = Running]
-  G --> H((Ende)) 
+  F --> G["Status = Running"]
+  G --> H["Ende"]
 ```
-
-**Abb. 5 – Kartenerzeugung:** Grid füllen, `P`/`T` platzieren, je nach `ratio` Hindernisse `O` setzen; danach Status `Running`.
+**Abb. 5 – Kartenerzeugung:** Grid fuellen, `P`/`T` platzieren, je nach `ratio` Hindernisse `O` setzen; danach Status `Running`.
 
 ---
 
-## 6) (Optional) Sequenz – Ein Zug
-
+## (Optional) Sequenz – Ein Zug
 ```mermaid
 sequenceDiagram
   participant U as User
@@ -134,16 +115,13 @@ sequenceDiagram
 
   U->>I: Taste (W/A/S/D/Q)
   I->>G: normalisierte Eingabe
-  alt gültig & frei
+  alt gueltig und frei
     G->>G: Position berechnen
-    G->>G: Grid + Zähler aktualisieren
-  else blockiert/ungültig
+    G->>G: Grid und Zaehler aktualisieren
+  else blockiert/ungueltig
     G->>U: Hinweis
   end
   G->>R: aktuelles Grid
   R-->>U: Spielfeld anzeigen
 ```
-
 **Abb. 6 – Sequenz (optional):** Interaktion von Nutzer, Eingabe, Spiel-Logik und Rendering in einem Zug.
-
----
