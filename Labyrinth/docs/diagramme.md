@@ -54,21 +54,22 @@ classDiagram
 
 ```mermaid
 flowchart TD
-  A[Start: Eingabe lesen (W/A/S/D oder Q)] -->|Q| Z[Beenden]
+  A([Taste lesen (W/A/S/D/Q)]) -->|Q gedrückt| Z((Ende))
   A --> B{Eingabe gültig?}
-  B -- nein --> M[Hinweis] --> A
-  B -- ja --> C[Zielposition berechnen]
-  C --> D{Innerhalb Feld?}
-  D -- nein --> M2[Ignorieren] --> A
-  D -- ja --> E{Zelle am Ziel?}
-  E -- Hindernis 'O' --> M3[Blockiert] --> A
-  E -- Schatz 'T' --> F[Spieler = Ziel setzen]
-  E -- Leere '.' --> F
-  F --> G[Züge++ & Grid aktualisieren]
-  G --> H{Schatz gefunden?}
-  H -- ja --> I[Siegmeldung → Ende]
-  H -- nein --> J[Spielfeld ausgeben] --> A
-  Z((Ende))
+  B -- Nein --> H[Hinweis anzeigen]
+  H --> A
+  B -- Ja --> C[Zielposition berechnen]
+  C --> D{Innerhalb des Feldes?}
+  D -- Nein --> A
+  D -- Ja --> E{Zielzelle: Inhalt}
+  E -- Hindernis O --> A
+  E -- Schatz T --> I([Siegmeldung])
+  I --> Z
+  E -- Leer --> F[Spieler auf Ziel setzen]
+  F --> G[Zuege++ und Grid aktualisieren]
+  G --> J{Schatz gefunden?}
+  J -- Ja --> I
+  J -- Nein --> A
 ```
 
 **Abb. 3 – Spielzug:** Eingabe prüfen → Zielposition berechnen → Kollision/Hindernis prüfen → Position/Zähler aktualisieren → Siegen oder weiterzeichnen.
