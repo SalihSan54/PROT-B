@@ -10,9 +10,18 @@
 
 ---
 
+## Praxisarbeit – Lösungsdokument
+
+- **PDF (Browser/GitHub):**  
+  [Lösungsdokument auf GitHub](https://github.com/SalihSan54/PROT-B/blob/main/Labyrinth/docs/L%C3%B6sungsdokument.pdf)
+
+
+---
+
 ## Hinweis
+
 - In **VS Code Codespaces** lassen sich PDFs im Editor nicht direkt anzeigen.  
-- Deshalb ist die **Markdown-Version** die aktuelle und gültige Fassung.  
+- Deshalb ist die **Markdown-Version** bzw. die **GitHub-Links** die aktuell gültige Fassung.  
 
 ---
 
@@ -20,9 +29,9 @@
 
 ```bash
 make
-./labyrinth          # Standard: 10x10, ~15% Hindernisse
+./labyrinth           # Standard: 10x10, ~15% Hindernisse
 
 # Beispiel mit Parametern (Zeilen, Spalten, Hindernis-Quote):
 ./labyrinth 12 12 0.2
 
-make test            # Autotest -> "OK"
+make test             # Autotest -> "ok"
