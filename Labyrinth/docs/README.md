@@ -15,6 +15,18 @@
 - **PDF (Browser/GitHub):**  
   [Lösungsdokument auf GitHub](https://github.com/SalihSan54/PROT-B/blob/main/Labyrinth/docs/L%C3%B6sungsdokument.pdf)
 
+- **PDF lokal im Repo:**  
+  [Lösungsdokument.pdf](./Lösungsdokument.pdf)
+
+---
+
+## Diagramme
+
+- **Diagramme als Markdown (Browser/GitHub):**  
+  [Diagramme auf GitHub](https://github.com/SalihSan54/PROT-B/blob/main/Labyrinth/docs/diagramme.md)
+
+- **Diagramme lokal im Repo:**  
+  [diagramme.md](./diagramme.md)
 
 ---
 
@@ -28,10 +40,14 @@
 ## Kurz-Anleitung (Build & Run)
 
 ```bash
+# Kompilieren
 make
-./labyrinth           # Standard: 10x10, ~15% Hindernisse
+
+# Standard: 10x10, ~15% Hindernisse
+./labyrinth
 
 # Beispiel mit Parametern (Zeilen, Spalten, Hindernis-Quote):
 ./labyrinth 12 12 0.2
 
-make test             # Autotest -> "ok"
+# Tests ausführen
+make test
