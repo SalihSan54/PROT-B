@@ -1,63 +1,48 @@
 # Management Summary – Praxisarbeit Programmiertechnik (C)
 
-Dieses Projekt implementiert ein kleines, textbasiertes **Labyrinth-Spiel** in C. Der Spieler (`P`) bewegt sich mit **W/A/S/D** zum Schatz (`T`). Hindernisse (`O`) blockieren den Weg. Ziel war es, zentrale Inhalte der Programmiertechnik praxisnah umzusetzen (Datenstrukturen, Algorithmik, Speicherverwaltung, Modularisierung, Build & Test, Doku).
+Dieses Projekt implementiert ein kleines, textbasiertes **Labyrinth-Spiel** in C. 
+Der Spieler (`P`) bewegt sich mit **W/A/S/D** zum Schatz (`T`). Hindernisse (`O`) blockieren den Weg. 
+Ziel war es, zentrale Inhalte der Programmiertechnik praxisnah umzusetzen (Datenstrukturen, Algorithmik, Modularisierung, Build & Test, Dokumentation).
 
 ---
 
 ## Vorgehen & Qualitätssicherung
-- **Vorgehen:** Zuerst **Datenmodell & Schnittstellen** im Header definiert, dann Funktionen iterativ implementiert und über die Konsole getestet. Randfälle (Wand/Randkollision, Beenden) wurden früh überprüft.
-- **Spezifisch & Robustheit:** Alle dynamischen Speicherbereiche werden freigegeben (`maze_free`); Eingaben werden validiert; Out-of-Bounds-Bewegungen verhindert.
-- **Build & Tests:** Ein **Makefile** automatisiert Build/Run/Autotest. `make test` verifiziert elementare Bewegungen/Kollision → Ausgabe **“…OK”**. Zusätzlich manuelle Tests (siehe Testplan).
-- **Dokumentation:** README (Build/Run), **Diagramme** (Mermaid) zur Architektur und Abläufen, Management-Summary für Entscheider.
-
-**Screenshots / Artefakte:** siehe `docs/diagramme.md` und `docs/tests/testplan.md`.
+- **Datenmodell & Schnittstellen:** im Header definiert, modulare Struktur, klare Trennung von Spiellogik, Eingabe, Spielfeld und Renderer.  
+- **Robustheit:** Eingaben validiert, Kollisionen mit Wänden/Hindernissen korrekt behandelt.  
+- **Tests:** `make test` prüft Bewegungen, Eingaben und Spiellogik automatisch.  
+- **Dokumentation:** Diagramme und Beschreibung der einzelnen Module.  
 
 ---
 
 ## Praxistauglichkeit & Nutzen
-- **Einfach reproduzierbar:** `make` → `./labyrinth 12 12 0.2`
-- **Wartbar & erweiterbar:** Klare Trennung von Schnittstellen (Header) und Implementierung; modulare Struktur.
-- **Vorlage für Übungen:** Eignet sich als Übungs-/Prüfungsvorlage (z. B. weitere Regeln, Punktezähler, mehrere Level).
+- **Einfach reproduzierbar:** Kompilierbar mit `make`, Start über `./labyrinth`.  
+- **Wartbar & erweiterbar:** modulare Aufteilung, klare Schnittstellen.  
+- **Didaktischer Nutzen:** eignet sich als Vorlage für Übungen (z. B. Erweiterung mit mehreren Leveln oder Punktezähler).  
 
 ---
 
 ## Grenzen & Risiken
-- Das Spiel ist bewusst **textbasiert** (keine GUI, einfache Darstellung).  
-- Bei sehr hoher Hindernisdichte kann ein Pfad **unwahrscheinlicher** werden → Standardwerte moderat wählen (z. B. Ratio ~0.15–0.2).
-- Direkte Tastenabfrage ohne Enter wurde zugunsten der Portabilität nicht umgesetzt.
-
----
-
-## Nächste Schritte (Roadmap)
-- Mehrere Schätze / Level und **Punkte-Zähler**  
-- **Respawn** eines neuen Schatzes statt sofortigem Spielende  
-- Farbliche Hervorhebung, High-Score  
-- Optional: Seed-Parameter für reproduzierbare Layouts
+- Spiel ist bewusst **textbasiert** (keine GUI).  
+- Bei sehr vielen Hindernissen kann das Spielfeld für Spieler unübersichtlich wirken.  
+- Erweiterte Features (Punktesystem, mehrere Level) sind noch nicht umgesetzt.  
 
 ---
 
 ## Diagramme (Überblick)
-Die Diagramme erklären Aufbau und Ablauf. **Alle Diagramme** befinden sich gesammelt in:  
-**[`docs/diagramme.md`](./diagramme.md)**
+Die Diagramme helfen, Aufbau und Abläufe des Programms verständlich darzustellen.  
+👉 [Zu den Diagrammen (lokal)](./diagramme.md)  
+👉 [Zu den Diagrammen (GitHub)](https://github.com/SalihSan54/PROT-B/blob/main/Labyrinth/docs/diagramme.md)
 
-**Abbildungen:**
-1. **Modul-Überblick (Dateien & Abhängigkeiten)** – zeigt `main.c`, API (`labyrinth.h`), Implementierung (`labyrinth.c`) und `tests/`.
-2. **Datenmodell (C-Structs)** – `Game` (Grid, Parameter, Positionen) und `Pos` (r/c).
-3. **Ablauf eines Spielzugs** – Eingabe → Bewegung → Kollision/Blockade → Gewinn/Weiter.
-4. **Spielzustände (State Machine)** – `Init → Running → Win/Exit`.
-5. **Kartenerzeugung (Map/Seed/Hindernisse)** – Parameter → Hindernisse → Platzierung P/T.
-6. **Sequenz – Ein Zug (optional)** – zeitliche Reihenfolge: Input → Berechnung → Ausgabe.
-
-> **Hinweis:** Unter GitHub werden die Mermaid-Diagramme automatisch gerendert. In VS Code (Codespaces) ggf. die Markdown-Vorschau öffnen.
 
 ---
 
-## Kurz­anleitung
-```bash
-make
-./labyrinth            # Standard: 10x10, ~15% Hindernisse
+## Nächste Schritte (Roadmap)
+- Einführung von Schwierigkeitsstufen und Punktezähler.  
+- Entwicklung einer grafischen Benutzeroberfläche.  
+- Erweiterte Tests zur Verbesserung von Stabilität und Robustheit.  
 
-# Beispiel mit Parametern (rows cols ratio):
-./labyrinth 12 12 0.2
+---
 
-make test              # Autotest -> "OK"
+## Fazit
+Das Projektziel – ein funktionierendes Konsolenspiel mit klarer Spiellogik, zuverlässiger Eingabeverarbeitung und verständlicher Dokumentation – wurde erreicht.  
+Die Arbeit zeigt, dass sich mit **systematischem Vorgehen**, **Einsatz von Diagrammen** und **schrittweiser Umsetzung** ein vollständiges Programm entwickeln lässt, das sowohl technisch korrekt als auch nachvollziehbar dokumentiert ist.

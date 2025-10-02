@@ -1,0 +1,11 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    { "label": "make", "type": "shell", "command": "make",
+      "options": { "cwd": "${workspaceFolder}" }, "problemMatcher": ["$gcc"] },
+    { "label": "run",  "type": "shell", "command": "./labyrinth",
+      "options": { "cwd": "${workspaceFolder}" }, "dependsOn": "make" },
+    { "label": "test", "type": "shell", "command": "make test",
+      "options": { "cwd": "${workspaceFolder}" }, "dependsOn": "make" }
+  ]
+}
