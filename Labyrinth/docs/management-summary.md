@@ -30,8 +30,8 @@ Ziel war es, zentrale Inhalte der Programmiertechnik praxisnah umzusetzen (Daten
 
 ## Diagramme (Überblick)
 Die Diagramme helfen, Aufbau und Abläufe des Programms verständlich darzustellen.  
-👉 [Zu den Diagrammen (lokal)](./diagramme.md)  
-👉 [Zu den Diagrammen (GitHub)](https://github.com/SalihSan54/PROT-B/blob/main/Labyrinth/docs/diagramme.md)
+ [Zu den Diagrammen (lokal)](./diagramme.md)  
+ [Zu den Diagrammen (GitHub)](https://github.com/SalihSan54/PROT-B/blob/main/Labyrinth/docs/diagramme.md)
 
 
 ---
